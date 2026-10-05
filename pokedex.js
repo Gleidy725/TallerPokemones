@@ -1,3 +1,4 @@
+const prompt = require('prompt-sync')();
 //Parte II
 //busca pokemon específico
 async function buscarPokemon(nombre) {
@@ -12,7 +13,7 @@ async function buscarPokemon(nombre) {
         return null;
     } else {
         let infoPokemon = await respuesta.json();
-        //console.log("Nombre pokemon:",infoPokemon.name, "ID:",infoPokemon.id);
+        console.log("Nombre pokemon:",infoPokemon.name, "ID:",infoPokemon.id);
         return infoPokemon;
     }
 }
@@ -118,7 +119,7 @@ async function pokemonMasFuerte(listaNombres,stat){
         }
     }
     if(mejorNombre==""){
-        console.log("La stat no existe");
+        console.log("No hay ganador");
         return;
     }else{
         let ganador= await buscarPokemon(mejorNombre);
@@ -127,6 +128,46 @@ async function pokemonMasFuerte(listaNombres,stat){
         return mejorNombre;
     }
 }
+
+async function menu(){
+    let nombre;
+    let infoPokemon;
+    let stat;
+    let respuesta;
+    console.log("****************POKEDEX*****************");
+    console.log("\n1.Buscar un Pokemon",
+        "\n2.Mostrar Ficha de un Pokemon",
+        "\n3.Comparar la stat de dos pokemones específicos",
+        "\n4.Buscar en una lista cuál pokemon es más fuerte en un stat específico"
+    )
+    respuesta = prompt("Respuesta:");
+    if(respuesta==1){
+        nombre=prompt("Nombre del pokemon: ");
+        infoPokemon=await buscarPokemon(nombre);
+    }else if(respuesta==2){
+        nombre=prompt("Nombre del pokemon:");
+        infoPokemon=await buscarPokemon(nombre);
+        mostrarFicha(infoPokemon);
+    }else if(respuesta==3){
+        let nombre1=prompt("Nombre del primer pokemon: ");
+        let nombre2=prompt("Nombre del segundo pokemon: ");
+        stat=prompt("Stat a comparar:");
+        compararPokemon(nombre1,nombre2,stat);
+    }else if(respuesta==4){
+        let arreglo=[];
+        for(let l=0;l<6;l++){
+            console.log("Nombre #",l+1)
+            nombre=prompt();
+            arreglo.push(nombre);
+        }
+        stat=prompt("Stat a comparar:");
+        pokemonMasFuerte(arreglo,stat);
+    }else{
+        console.log("El valor no es válido");
+    }
+}
+
+menu();
 
 //Estructura llamado a buscarPokemon
 //let infoPokemon1 = await buscarPokemon("snorlax");
@@ -138,6 +179,6 @@ async function pokemonMasFuerte(listaNombres,stat){
 //compararPokemon("snorlax", "macham", "defense");
 
 //Estructura llamado para elegir pokemon más fuerte
-pokemonMasFuerte(["pikachu","charizard","Bulbasaur","Squirtle","Lucaio","Gengar"],"pecial-attack");
+//pokemonMasFuerte(["pikachu","charizard","Bulbasaur","Squirtle","Lucario","Gengar"],"defense");
 
 
